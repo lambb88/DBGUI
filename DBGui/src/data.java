@@ -1,34 +1,8 @@
+package com.example.db;
 import java.awt.Color;
-
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.forms.IManagedForm;
-import org.eclipse.ui.forms.editor.FormEditor;
-import org.eclipse.ui.forms.editor.FormPage;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
-
-import swing2swt.layout.BorderLayout;
-
-import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.forms.widgets.FormText;
-import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Table;
 
 
 public class data extends FormPage {
-	private Text text;
-	private Text text_1;
-	private Text text_2;
-	private Text text_3;
 	private Label lblAssessmentItem;
 	private Label lblSemester;
 	private Label lblCriterion;
@@ -36,34 +10,25 @@ public class data extends FormPage {
 	private FormText formText;
 	private Image image;
 	private Button btnSubmit;
+	private Label lblLastname;
+	private Text txtWade;
+	private Text txtAndrews;
+	private Text txtA;
+	private Text txtFa;
+	private Text txtAfac;
+	private Button student_btn;
+	private Button ai_button;
+	private Button crit_btn;
 	private Table table;
 
-	/**
-	 * Create the form page.
-	 * @param id
-	 * @param title
-	 */
 	public data(String id, String title) {
 		super(id, title);
 	}
 
-	/**
-	 * Create the form page.
-	 * @param editor
-	 * @param id
-	 * @param title
-	 * @wbp.parser.constructor
-	 * @wbp.eval.method.parameter id "Some id"
-	 * @wbp.eval.method.parameter title "Some title"
-	 */
 	public data(FormEditor editor, String id, String title) {
 		super(editor, id, title);
 	}
 
-	/**
-	 * Create contents of the form.
-	 * @param managedForm
-	 */
 	@Override
 	protected void createFormContent(IManagedForm managedForm) {
 		FormToolkit toolkit = managedForm.getToolkit();
@@ -80,41 +45,63 @@ public class data extends FormPage {
 		new Label(managedForm.getForm().getBody(), SWT.NONE);
 		
 		lblAssessmentItem = managedForm.getToolkit().createLabel(managedForm.getForm().getBody(), "Assessment Item", SWT.NONE);
-		lblAssessmentItem.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+		lblAssessmentItem.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		
-		text = new Text(managedForm.getForm().getBody(), SWT.BORDER);
-		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		managedForm.getToolkit().adapt(text, true, true);
+		txtA = managedForm.getToolkit().createText(managedForm.getForm().getBody(), "New Text", SWT.NONE);
+		txtA.setText("A1");
+		txtA.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		lblSemester = managedForm.getToolkit().createLabel(managedForm.getForm().getBody(), "Semester", SWT.NONE);
-		lblSemester.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+		lblSemester.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		
-		text_1 = new Text(managedForm.getForm().getBody(), SWT.BORDER);
-		text_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		text_1.setSize(15, 15);
-		managedForm.getToolkit().adapt(text_1, true, true);
+		txtFa = managedForm.getToolkit().createText(managedForm.getForm().getBody(), "New Text", SWT.NONE);
+		txtFa.setText("FA12");
+		txtFa.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		lblCriterion = managedForm.getToolkit().createLabel(managedForm.getForm().getBody(), "Criterion", SWT.NONE);
-		lblCriterion.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+		lblCriterion.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		
-		text_2 = new Text(managedForm.getForm().getBody(), SWT.BORDER);
-		text_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		managedForm.getToolkit().adapt(text_2, true, true);
+		txtAfac = managedForm.getToolkit().createText(managedForm.getForm().getBody(), "New Text", SWT.NONE);
+		txtAfac.setText("A1FA12C4");
+		txtAfac.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		lblStudents = managedForm.getToolkit().createLabel(managedForm.getForm().getBody(), "Student(s)", SWT.NONE);
-		lblStudents.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+		lblStudents = managedForm.getToolkit().createLabel(managedForm.getForm().getBody(), "FirstName", SWT.NONE);
+		lblStudents.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		
-		text_3 = new Text(managedForm.getForm().getBody(), SWT.BORDER);
-		text_3.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		managedForm.getToolkit().adapt(text_3, true, true);
+		txtWade = managedForm.getToolkit().createText(managedForm.getForm().getBody(), "New Text", SWT.NONE);
+		txtWade.setText("Wade");
+		txtWade.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		btnSubmit = managedForm.getToolkit().createButton(managedForm.getForm().getBody(), "Submit", SWT.NONE);
+		lblLastname = managedForm.getToolkit().createLabel(managedForm.getForm().getBody(), "LastName", SWT.NONE);
+		lblLastname.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		
+		txtAndrews = managedForm.getToolkit().createText(managedForm.getForm().getBody(), "New Text", SWT.NONE);
+		txtAndrews.setText("Andrews");
+		txtAndrews.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		btnSubmit = managedForm.getToolkit().createButton(managedForm.getForm().getBody(), "Look-up by Entries", SWT.NONE);
 		GridData gd_btnSubmit = new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1);
 		gd_btnSubmit.widthHint = 585;
 		btnSubmit.setLayoutData(gd_btnSubmit);
 		
-		table = managedForm.getToolkit().createTable(managedForm.getForm().getBody(), SWT.NONE);
+		student_btn = new Button(managedForm.getForm().getBody(), SWT.NONE);
+		student_btn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+		managedForm.getToolkit().adapt(student_btn, true, true);
+		student_btn.setText("All Student List");
+		
+		ai_button = new Button(managedForm.getForm().getBody(), SWT.NONE);
+		ai_button.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+		ai_button.setText("Assessment Item Scores");
+		managedForm.getToolkit().adapt(ai_button, true, true);
+		
+		crit_btn = new Button(managedForm.getForm().getBody(), SWT.NONE);
+		crit_btn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+		crit_btn.setText("Criterion Scores");
+		managedForm.getToolkit().adapt(crit_btn, true, true);
+		
+		table = new Table(managedForm.getForm().getBody(), SWT.BORDER | SWT.FULL_SELECTION);
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+		managedForm.getToolkit().adapt(table);
 		managedForm.getToolkit().paintBordersFor(table);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);

@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Vector;
 
@@ -23,13 +24,14 @@ public class Table extends JFrame{
 
 	  JTextField queryField;
 
-	  QueryTableModel qtm;
+	  ResultSetTableModelFactory rstm;
 
-	  public Table() {
+	  public Table() throws ClassNotFoundException, SQLException {
 	    super("Database Test Frame");
 	    setDefaultCloseOperation(EXIT_ON_CLOSE);
 	    setSize(350, 200);
-	    qtm = new QueryTableModel();
+	    rstm = new ResultSetTableModelFactory();
+	    QueryTableModel qtm = rstm.getResultSetTableModel("SELECT * FROM `GRADES`;");
 	    JTable table = new JTable(qtm);
 	    JScrollPane scrollpane = new JScrollPane(table);
 	    JPanel p1 = new JPanel();
@@ -39,7 +41,6 @@ public class Table extends JFrame{
 	    //p1.add(new JLabel("Enter your query: "));
 	    //p1.add(queryField = new JTextField());
 	    p1.add(new JLabel("Click here to send: "));
-	    qtm.setQuery("SELECT * FROM `STUDENTS`;");
 	    JButton jb = new JButton("Search");
 	    jb.addActionListener(new ActionListener() {
 	      public void actionPerformed(ActionEvent e) {
@@ -52,7 +53,7 @@ public class Table extends JFrame{
 	    getContentPane().add(scrollpane, BorderLayout.CENTER);
 	  }
 
-	  public static void main(String args[]) {
+	  public static void main(String args[]) throws ClassNotFoundException, SQLException {
 	    Table tt = new Table();
 	    tt.setVisible(true);
 	  }
@@ -64,115 +65,106 @@ public class Table extends JFrame{
 	//
 
 	class QueryTableModel extends AbstractTableModel {
-	  Vector cache; // will hold String[] objects . . .
-
-	  int colCount;
-
-	  String[] headers;
-
-	  Connection db;
-
-      Statement statement;
-
-	  String currentURL;
-
-	  public QueryTableModel() {
-	    cache = new Vector();
-	    new org.postgresql.Driver();
-	  }
-
-	  public String getColumnName(int i) {
-	    return headers[i];
-	  }
-
-	  public int getColumnCount() {
-	    return colCount;
-	  }
-
-	  public int getRowCount() {
-	    return cache.size();
-	  }
-
-	  public Object getValueAt(int row, int col) {
-	    return ((String[]) cache.elementAt(row))[col];
-	  }
-
-	  public void setHostURL(String url) {
-	    if (url.equals(currentURL)) {
-	      // same database, we can leave the current connection open
-	      return;
+		private ResultSet results ; // The ResultSet to interpret to bind to the model
+	    private ResultSetMetaData metadata ; // Additional information about the results
+	    private int numcols , numrows ; // How many rows and columns in the table
+	   
+	    /**
+	    * Creates a TableModel from a ResultSet .
+	    **/
+	    QueryTableModel(ResultSet results) throws SQLException {
+	        this.results = results ;
+	        metadata = results.getMetaData (); // Get metadata on them
+	        numcols = metadata.getColumnCount (); // How many columns ?
+	        results.last (); // Here ’s the kludge -- Move to last row
+	        numrows = results.getRow (); // And use getRow to determine how many rows
 	    }
-	    // Oops . . . new connection required
-	    closeDB();
-	    initDB();
-	    currentURL = "webdev.cs.uwosh.edu";
-	  }
-
-	  // All the real work happens here; in a real application,
-	  // we'd probably perform the query in a separate thread.
-	  public void setQuery(String query) {
-	    cache = new Vector();
-	    try {
-	      // Execute the query and store the result set and its metadata
-	      statement = db.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-	      ResultSet rs = statement.executeQuery(query);
-	      ResultSetMetaData meta = rs.getMetaData();
-	      colCount = meta.getColumnCount();
-
-	      // Now we must rebuild the headers array with the new column names
-	      headers = new String[colCount];
-	      for (int h = 1; h <= colCount; h++) {
-	        headers[h - 1] = meta.getColumnName(h);
-	      }
-
-	      // and file the cache with the records from our query. This would
-	      // not be
-	      // practical if we were expecting a few million records in response
-	      // to our
-	      // query, but we aren't, so we can do this.
-	      while (rs.next()) {
-	        String[] record = new String[colCount];
-	        for (int i = 0; i < colCount; i++) {
-	          record[i] = rs.getString(i + 1);
-	        }
-	        cache.addElement(record);
-	      }
-	      fireTableChanged(null); // notify everyone that we have a new table.
-	    } catch (Exception e) {
-	      cache = new Vector(); // blank it out and keep going.
-	      e.printStackTrace();
+	    
+	    // These two TableModel methods return the size of the table
+	    public int getColumnCount () { return numcols ; }
+	    public int getRowCount () { return numrows ; }
+	    
+	    // This TableModel method returns columns names from the
+	    // ResultSetMetaData so that we can provide column labels in the
+	    // JTable display
+	    public String getColumnName(int column) {
+	        try {
+	            return metadata.getColumnLabel(column +1);
+	        } catch (SQLException e) { return e. toString (); }
 	    }
-	  }
-
-	  public void initDB() {
-	    try {
-		    String DRIVER="jdbc:mysql://webdev.cs.uwosh.edu:4381";
-		    String DRIVER_CLASS="com.mysql.jdbc.Driver";
-	    	Class driver = Class.forName(DRIVER_CLASS);
-	    	Connection connection;
-	        String dbname = "lambb88";
-	        String user = "lambb88";
-	        String pwd = "j477488";
-	        connection = DriverManager.getConnection( DRIVER+dbname, user,pwd);;
-	    } catch (Exception e) {
-	      System.out.println("Could not initialize the database.");
-	      e.printStackTrace();
+	    
+	    /**
+	    * Returns the value , as a String , at each cell of the table .
+	    * Note that SQL row and column numbers start at 1, but TableModel
+	    * column numbers start at 0.
+	    **/
+	    public Object getValueAt(int row , int column) {
+	        try {
+	            results.absolute(row +1); // Go to the specified row
+	            Object o = results.getObject(column +1); // Get value of the column
+	            if (o == null) return null ;
+	            else return o. toString (); // Convert it to a string
+	        } 
+	        catch ( SQLException e) { return e. toString (); }
 	    }
-	  }
-
-	  public void closeDB() {
-	    try {
-	      if (statement != null) {
-	        statement.close();
-	      }
-	      if (db != null) {
-	        db.close();
-	      }
-	    } catch (Exception e) {
-	      System.out.println("Could not close the current connection.");
-	      e.printStackTrace();
+	    
+	    public void close() {
+	        try { results.getStatement(). close(); }
+	        catch ( SQLException e) {};
 	    }
+	    
+	    protected void finalize () { close(); }
 	  }
+	class ResultSetTableModelFactory {
+	    Connection connection;
+	    
+	    /** The constructor method uses the argument to create db Connection */
+	    public ResultSetTableModelFactory() throws ClassNotFoundException , SQLException
+	    {
+	       try {
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+		} catch (InstantiationException e) {
+			// do nothing
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// do more nothing
+			e.printStackTrace();
+		}
+	       String dbURL = "jdbc:mysql://webdev.cs.uwosh.edu:4381/";
+	       String dbname = "lambb88";
+	       String user = "lambb88";
+	       String pwd = "j477488";
+	        connection = DriverManager.getConnection( dbURL+dbname, user,pwd);
+	    }
+	    
+	    /**
+	    * Takes a SQL query , pass it to the database , obtain the results
+	    * as a ResultSet , and return a ResultSetTableModel object
+	    **/
+	    public QueryTableModel getResultSetTableModel(String query)throws SQLException
+	    {
+	        if ( connection == null )
+	        throw new IllegalStateException ("Connection already closed .");
+	        // Create a Statement object that will be used to execute the
+	        // query . The arguments specify that the returned ResultSet
+	        // will be scrollable and read - only . The scrollable property
+	        // is a necessary kludge to determine the number of rows in
+	        // the table / ResultSet
+	        Statement statement = connection. createStatement (ResultSet.TYPE_SCROLL_INSENSITIVE ,ResultSet.CONCUR_READ_ONLY );
+	        // Run the query , creating a ResultSet
+	        ResultSet r = statement.executeQuery(query);
+	        // Create and return a TableModel for the ResultSet
+	        return new QueryTableModel(r);
+	    }
+	    
+	    public void close () {
+	        try { connection.close(); } // Try to close the connection
+	        catch ( Exception e) {} // Do nothing on error
+	        connection = null ;
+	    }
+	    
+	    protected void finalize () { 
+	        close (); 
+	    }
 	}
-
 

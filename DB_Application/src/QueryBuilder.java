@@ -16,28 +16,32 @@ public class QueryBuilder {
 	
 	public String buildQuery(){
 		String query = null;
-		if(fname == null && criterion !=null){
-			query = "SELECT avg(SCORE) AS AverageScore, min(SCORE) AS MinScore, max(SCORE) AS MaxScore "
-					+ "FROM GRADES WHERE CID = "+ criterion +" GROUP BY CID;";
+		if(fname.equals("") && !criterion.equals("")){
+			query = "SELECT avg(`SCORE`) AS AverageScore, min(`SCORE`) AS MinScore, max(`SCORE`) AS MaxScore "
+					+ "FROM `GRADES` WHERE `CID` = '"+ criterion +"' GROUP BY `CID`;";
 		}
-		else if(fname == null && criterion == null && assessItem != null && semester != null){
-			query = "SELECT AID, AVG(SCORE) AS AverageScore, min(SCORE) AS MinScore, max(SCORE) AS MaxScore FROM CRITERION "
-					+ "Join GRADES ON GRADES.CID = CRITERION.CID WHERE AID = "+ assessItem + semester +" group by AID;";
+		else if(fname.equals("")  && criterion.equals("") && !assessItem.equals("") && !semester.equals("")){
+			query = "SELECT `AID`, AVG(SCORE) AS AverageScore, min(SCORE) AS MinScore, max(SCORE) AS MaxScore FROM `CRITERION` "
+					+ "Join `GRADES` ON GRADES.CID = CRITERION.CID WHERE `AID` = '" + assessItem + semester +"' group by `AID`;";
 		}
-		else if(fname == null && criterion == null && semester == null && assessItem != null){
-			query = "SELECT AI, AVG(SCORE) AS AverageScore, min(SCORE) AS MinScore, max(SCORE) AS MaxScore "
-					+ "FROM CRITERION Join GRADES ON GRADES.CID = CRITERION.CID WHERE AI = " + assessItem + " group by AI;";
+		else if(fname.equals("")  && criterion.equals("") && !assessItem.equals("") && semester.equals("")){
+			query = "SELECT `AI`, AVG(`SCORE`) AS AverageScore, min(`SCORE`) AS MinScore, max(`SCORE`) AS MaxScore "
+					+ "FROM `CRITERION` Join GRADES ON GRADES.CID = CRITERION.CID WHERE `AI` = '" + assessItem + "' group by `AI`;";
 		}
-		else if(fname != null && criterion == null && semester == null && assessItem != null){
-			query = "SELECT AI,MAX(GRADES.SCORE) as Highest,MIN(GRADES.SCORE) as Lowest,AVG(GRADES.SCORE) as AVG "
-					+ "FROM GRADES JOIN CRITERION ON GRADES.CID = CRITERION.CID JOIN "
-					+ "(SELECT CID,SCORE FROM GRADES WHERE STUDENTKEY = "
-					+ "(SELECT STUDENTKEY FROM STUDENTS WHERE FNAME ="+ fname +" AND LNAME = "+ lname +"))tmp ON GRADES.CID = tmp.CID "
-							+ "GROUP BY AI;";
+		else if(!fname.equals("")  && criterion.equals("") && !assessItem.equals("") && semester.equals("")){
+			query = "SELECT `AI` ,MAX(GRADES.SCORE) as Highest,MIN(GRADES.SCORE) as Lowest,AVG(GRADES.SCORE) as AVG "
+					+ "FROM `GRADES` JOIN `CRITERION` ON GRADES.CID = CRITERION.CID JOIN "
+					+ "(SELECT `CID`, `SCORE` FROM `GRADES` WHERE `STUDENTKEY` = "
+					+ "(SELECT `STUDENTKEY` FROM `STUDENTS` WHERE `FNAME` = '"+ fname +"' AND LNAME = '"+ lname +"'))tmp ON GRADES.CID = tmp.CID "
+							+ "GROUP BY `AI`;";
 		}
+		/**else if(fname.equals("")  && !criterion.equals("") && !assessItem.equals("") && semester.equals("")){
+			query = "SELECT `CID`, avg(`SCORE`) AS AverageScore, min(`SCORE`) AS MinScore, max(`SCORE`) AS MaxScore "
+					+ "FROM `GRADES` ORDER BY `CID`;";
+		}**/
 		else{
-			//invalid entry
-			query = null;
+			//DEFUALT
+			query = "Select `LNAME`,`FNAME`, `CID`, `SCORE` FROM `STUDENTS` Join `GRADES` on STUDENTS.STUDENTKEY = GRADES.STUDENTKEY ORDER BY `LNAME`, `CID`;";
 		}
 
 		return query;
@@ -48,7 +52,7 @@ public class QueryBuilder {
 	}
 	
 	public String criterionScores(){
-		return "SELECT `CID`, avg(SCORE) AS AverageScore, min(SCORE) AS MinScore, max(SCORE) AS MaxScore "
+		return "SELECT `CID`, avg(`SCORE`) AS AverageScore, min(`SCORE`) AS MinScore, max(`SCORE`) AS MaxScore "
 				+ "FROM `GRADES` ORDER BY `CID`;";
 	}
 	

@@ -16,7 +16,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
 public class Table extends JFrame{
 	JTextField aiField;
@@ -30,10 +33,8 @@ public class Table extends JFrame{
 	  public Table() throws ClassNotFoundException, SQLException {
 	    super("Database Test Frame");
 	    setDefaultCloseOperation(EXIT_ON_CLOSE);
-	    
-	    
-	    setSize(350, 200);
-	    
+
+	    setSize(950,700);
 	    JPanel p1 = new JPanel();
 	    p1.setLayout(new GridLayout(3, 2));
 	    p1.add(new JLabel("AssessmentItem"));
@@ -51,7 +52,8 @@ public class Table extends JFrame{
 	    search.addActionListener(new ActionListener() {
 	      public void actionPerformed(ActionEvent e) {
 	    	QueryBuilder q = new QueryBuilder(fnameField.getText(), lnameField.getText(), criteriaField.getText(), aiField.getText(), semesterField.getText());
-	    	try {
+	    	//QueryBuilder q = new QueryBuilder("Wade", "Andrews", "A1Fa10C2", "A1", "Fa10");
+	    	  try {
 				rstm = new ResultSetTableModelFactory();
 			} catch (ClassNotFoundException e1) {
 				// do nothing
@@ -67,37 +69,76 @@ public class Table extends JFrame{
 				// do nothing
 				e1.printStackTrace();
 			}
-	  	    JTable table = new JTable(qtm);
-	  	    scrollpane = new JScrollPane(table);
+			JScrollPane scrollPane = new JScrollPane();
+	        scrollPane.setViewportBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+	        scrollPane.setBounds(0,75,950,700);
+	        getContentPane().add(scrollPane);	
+	        
+	        JPanel resultsPanel = new JPanel();
+	        scrollPane.setViewportView(resultsPanel);
+	        resultsPanel.setLayout(new BorderLayout(0, 0));
+	        
+	        JTable ResultsTable = new JTable(qtm);
+	        ResultsTable.getColumnModel();
+	        ResultsTable.setFillsViewportHeight(true);
+	        ResultsTable.setCellSelectionEnabled(true);
+	        ResultsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+	        ResultsTable.setBounds(366, 6, 0, 0);
+	        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+	        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+	        ResultsTable.setDefaultRenderer(String.class, centerRenderer); 
+	        // Add the Header
+	        resultsPanel.add(ResultsTable.getTableHeader(), BorderLayout.NORTH);
+	        resultsPanel.add(ResultsTable, BorderLayout.CENTER);
+	        resultsPanel.add(ResultsTable);
 	      }
 	    });
-	    
-	    JButton students = new JButton("All Students");
+	   
+	    /**  JButton students = new JButton("All Students");
 	    search.addActionListener(new ActionListener() {
 	      public void actionPerformed(ActionEvent e) {
 	    	QueryBuilder q = new QueryBuilder(fnameField.getText(), lnameField.getText(), criteriaField.getText(), aiField.getText(), semesterField.getText());
-	    	try {
-				rstm = new ResultSetTableModelFactory();
-			} catch (ClassNotFoundException e1) {
-				// do nothing
-				e1.printStackTrace();
-			} catch (SQLException e1) {
-				// do nothing
-				e1.printStackTrace();
-			}
-	  	    QueryTableModel qtm = null;
-			try {
-				qtm = rstm.getResultSetTableModel(q.allStudents());
-			} catch (SQLException e1) {
-				// do nothing
-				e1.printStackTrace();
-			}
-	  	    JTable table = new JTable(qtm);
-	  	    scrollpane = new JScrollPane(table);
-	      }
-	    });
-	    
-	    JButton criteriaScores = new JButton("Criteria Scores");
+	    	 try {
+					rstm = new ResultSetTableModelFactory();
+				} catch (ClassNotFoundException e1) {
+					// do nothing
+					e1.printStackTrace();
+				} catch (SQLException e1) {
+					// do nothing
+					e1.printStackTrace();
+				}
+		  	    QueryTableModel qtm = null;
+				try {
+					qtm = rstm.getResultSetTableModel(q.allStudents());
+				} catch (SQLException e1) {
+					// do nothing
+					e1.printStackTrace();
+				}
+				JScrollPane scrollPane = new JScrollPane();
+		        scrollPane.setViewportBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		        scrollPane.setBounds(0,75,950,700);
+		        getContentPane().add(scrollPane);	
+		        
+		        JPanel resultsPanel = new JPanel();
+		        scrollPane.setViewportView(resultsPanel);
+		        resultsPanel.setLayout(new BorderLayout(0, 0));
+		        
+		        JTable ResultsTable = new JTable(qtm);
+		        ResultsTable.getColumnModel();
+		        ResultsTable.setFillsViewportHeight(true);
+		        ResultsTable.setCellSelectionEnabled(true);
+		        ResultsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		        ResultsTable.setBounds(366, 6, 0, 0);
+		        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+		        ResultsTable.setDefaultRenderer(String.class, centerRenderer); 
+		        // Add the Header
+		        resultsPanel.add(ResultsTable.getTableHeader(), BorderLayout.NORTH);
+		        resultsPanel.add(ResultsTable, BorderLayout.CENTER);
+		        resultsPanel.add(ResultsTable);
+		      }
+		    });	    
+	  JButton criteriaScores = new JButton("Criteria Scores");
 	    search.addActionListener(new ActionListener() {
 	      public void actionPerformed(ActionEvent e) {
 	    	QueryBuilder q = new QueryBuilder(fnameField.getText(), lnameField.getText(), criteriaField.getText(), aiField.getText(), semesterField.getText());
@@ -117,8 +158,28 @@ public class Table extends JFrame{
 				// do nothing
 				e1.printStackTrace();
 			}
-	  	    JTable table = new JTable(qtm);
-	  	    scrollpane = new JScrollPane(table);
+			JScrollPane scrollPane = new JScrollPane();
+	        scrollPane.setViewportBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+	        scrollPane.setBounds(0,75,950,700);
+	        getContentPane().add(scrollPane);	
+	        
+	        JPanel resultsPanel = new JPanel();
+	        scrollPane.setViewportView(resultsPanel);
+	        resultsPanel.setLayout(new BorderLayout(0, 0));
+	        
+	        JTable ResultsTable = new JTable(qtm);
+	        ResultsTable.getColumnModel();
+	        ResultsTable.setFillsViewportHeight(true);
+	        ResultsTable.setCellSelectionEnabled(true);
+	        ResultsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+	        ResultsTable.setBounds(366, 6, 0, 0);
+	        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+	        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+	        ResultsTable.setDefaultRenderer(String.class, centerRenderer); 
+	        // Add the Header
+	        resultsPanel.add(ResultsTable.getTableHeader(), BorderLayout.NORTH);
+	        resultsPanel.add(ResultsTable, BorderLayout.CENTER);
+	        resultsPanel.add(ResultsTable);
 	      }
 	    });
 	    
@@ -142,17 +203,37 @@ public class Table extends JFrame{
 				// do nothing
 				e1.printStackTrace();
 			}
-	  	    JTable table = new JTable(qtm);
-	  	    scrollpane = new JScrollPane(table);
-		    getContentPane().add(scrollpane, BorderLayout.CENTER);
+			JScrollPane scrollPane = new JScrollPane();
+	        scrollPane.setViewportBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+	        scrollPane.setBounds(0,75,950,700);
+	        getContentPane().add(scrollPane);	
+	        
+	        JPanel resultsPanel = new JPanel();
+	        scrollPane.setViewportView(resultsPanel);
+	        resultsPanel.setLayout(new BorderLayout(0, 0));
+	        
+	        JTable ResultsTable = new JTable(qtm);
+	        ResultsTable.getColumnModel();
+	        ResultsTable.setFillsViewportHeight(true);
+	        ResultsTable.setCellSelectionEnabled(true);
+	        ResultsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+	        ResultsTable.setBounds(366, 6, 0, 0);
+	        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+	        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+	        ResultsTable.setDefaultRenderer(String.class, centerRenderer); 
+	        // Add the Header
+	        resultsPanel.add(ResultsTable.getTableHeader(), BorderLayout.NORTH);
+	        resultsPanel.add(ResultsTable, BorderLayout.CENTER);
+	        resultsPanel.add(ResultsTable);
 	      }
-	    });
+	    });**/
 	    
-	    p1.add(aiScores);
-	    p1.add(criteriaScores);
-	    p1.add(students);
+	   // p1.add(aiScores);
+	    //p1.add(criteriaScores);
+	   // p1.add(students);
 	    p1.add(search);
 	    getContentPane().add(p1, BorderLayout.NORTH);
+	    
 
 	  }
 
@@ -237,7 +318,7 @@ public class Table extends JFrame{
 	       String dbname = "lambb88";
 	       String user = "lambb88";
 	       String pwd = "j477488";
-	        connection = DriverManager.getConnection( dbURL+dbname, user,pwd);
+	       connection = DriverManager.getConnection( dbURL+dbname, user,pwd);
 	    }
 	    
 	    /**
@@ -266,8 +347,8 @@ public class Table extends JFrame{
 	        connection = null ;
 	    }
 	    
-	    protected void finalize () { 
+	    /*protected void finalize () { 
 	        close (); 
-	    }
+	    }*/
 	}
 

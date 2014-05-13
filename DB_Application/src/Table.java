@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -23,17 +24,16 @@ public class Table extends JFrame{
 	JTextField semesterField;
 	JTextField fnameField;
 	JTextField lnameField;
-
-	  ResultSetTableModelFactory rstm;
+	JScrollPane scrollpane;
+	ResultSetTableModelFactory rstm;
 
 	  public Table() throws ClassNotFoundException, SQLException {
 	    super("Database Test Frame");
 	    setDefaultCloseOperation(EXIT_ON_CLOSE);
+	    
+	    
 	    setSize(350, 200);
-	    rstm = new ResultSetTableModelFactory();
-	    QueryTableModel qtm = rstm.getResultSetTableModel("SELECT * FROM `GRADES`;");
-	    JTable table = new JTable(qtm);
-	    JScrollPane scrollpane = new JScrollPane(table);
+	    
 	    JPanel p1 = new JPanel();
 	    p1.setLayout(new GridLayout(3, 2));
 	    p1.add(new JLabel("AssessmentItem"));
@@ -46,17 +46,32 @@ public class Table extends JFrame{
 	    p1.add(fnameField = new JTextField());
 	    p1.add(new JLabel("Last Name"));
 	    p1.add(lnameField = new JTextField());
-	    //p1.add(new JLabel("Enter your query: "));
-	    //p1.add(queryField = new JTextField());
 	    
-	    JButton jb = new JButton("Search");
-	    jb.addActionListener(new ActionListener() {
+	    JButton search = new JButton("Search");
+	    search.addActionListener(new ActionListener() {
 	      public void actionPerformed(ActionEvent e) {
-	        //qtm.setHostURL(hostField.getText().trim());
-	        //qtm.setQuery(queryField.getText().trim());
+	    	QueryBuilder q = new QueryBuilder(fnameField.getText(), lnameField.getText(), criteriaField.getText(), aiField.getText(), semesterField.getText());
+	    	try {
+				rstm = new ResultSetTableModelFactory();
+			} catch (ClassNotFoundException e1) {
+				// do nothing
+				e1.printStackTrace();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	  	    QueryTableModel qtm = null;
+			try {
+				qtm = rstm.getResultSetTableModel(q.buildQuery());
+			} catch (SQLException e1) {
+				// do nothing
+				e1.printStackTrace();
+			}
+	  	    JTable table = new JTable(qtm);
+	  	    scrollpane = new JScrollPane(table);
 	      }
 	    });
-	    p1.add(jb);
+	    p1.add(search);
 	    getContentPane().add(p1, BorderLayout.NORTH);
 	    getContentPane().add(scrollpane, BorderLayout.CENTER);
 	  }

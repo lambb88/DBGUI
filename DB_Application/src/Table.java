@@ -18,9 +18,11 @@ import javax.swing.JTextField;
 import javax.swing.table.AbstractTableModel;
 
 public class Table extends JFrame{
-	JTextField hostField;
-
-	  JTextField queryField;
+	JTextField aiField;
+	JTextField criteriaField;
+	JTextField semesterField;
+	JTextField fnameField;
+	JTextField lnameField;
 
 	  ResultSetTableModelFactory rstm;
 
@@ -34,11 +36,19 @@ public class Table extends JFrame{
 	    JScrollPane scrollpane = new JScrollPane(table);
 	    JPanel p1 = new JPanel();
 	    p1.setLayout(new GridLayout(3, 2));
-	    //p1.add(new JLabel("Enter the Host URL: "));
-	    //p1.add(hostField = new JTextField());
+	    p1.add(new JLabel("AssessmentItem"));
+	    p1.add(aiField = new JTextField());
+	    p1.add(new JLabel("Criteria"));
+	    p1.add(criteriaField = new JTextField());
+	    p1.add(new JLabel("Semester"));
+	    p1.add(semesterField = new JTextField());
+	    p1.add(new JLabel("First Name"));
+	    p1.add(fnameField = new JTextField());
+	    p1.add(new JLabel("Last Name"));
+	    p1.add(lnameField = new JTextField());
 	    //p1.add(new JLabel("Enter your query: "));
 	    //p1.add(queryField = new JTextField());
-	    p1.add(new JLabel("Click here to send: "));
+	    
 	    JButton jb = new JButton("Search");
 	    jb.addActionListener(new ActionListener() {
 	      public void actionPerformed(ActionEvent e) {

@@ -1,4 +1,3 @@
-
 public class QueryBuilder {
 	
 	private String fname; 

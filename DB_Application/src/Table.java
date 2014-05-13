@@ -144,6 +144,7 @@ public class Table extends JFrame{
 			}
 	  	    JTable table = new JTable(qtm);
 	  	    scrollpane = new JScrollPane(table);
+		    getContentPane().add(scrollpane, BorderLayout.CENTER);
 	      }
 	    });
 	    
@@ -152,7 +153,7 @@ public class Table extends JFrame{
 	    p1.add(students);
 	    p1.add(search);
 	    getContentPane().add(p1, BorderLayout.NORTH);
-	    getContentPane().add(scrollpane, BorderLayout.CENTER);
+
 	  }
 
 	  public static void main(String args[]) throws ClassNotFoundException, SQLException {

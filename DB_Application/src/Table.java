@@ -57,7 +57,7 @@ public class Table extends JFrame{
 				// do nothing
 				e1.printStackTrace();
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
+				// do nothing
 				e1.printStackTrace();
 			}
 	  	    QueryTableModel qtm = null;
@@ -71,6 +71,85 @@ public class Table extends JFrame{
 	  	    scrollpane = new JScrollPane(table);
 	      }
 	    });
+	    
+	    JButton students = new JButton("All Students");
+	    search.addActionListener(new ActionListener() {
+	      public void actionPerformed(ActionEvent e) {
+	    	QueryBuilder q = new QueryBuilder(fnameField.getText(), lnameField.getText(), criteriaField.getText(), aiField.getText(), semesterField.getText());
+	    	try {
+				rstm = new ResultSetTableModelFactory();
+			} catch (ClassNotFoundException e1) {
+				// do nothing
+				e1.printStackTrace();
+			} catch (SQLException e1) {
+				// do nothing
+				e1.printStackTrace();
+			}
+	  	    QueryTableModel qtm = null;
+			try {
+				qtm = rstm.getResultSetTableModel(q.allStudents());
+			} catch (SQLException e1) {
+				// do nothing
+				e1.printStackTrace();
+			}
+	  	    JTable table = new JTable(qtm);
+	  	    scrollpane = new JScrollPane(table);
+	      }
+	    });
+	    
+	    JButton criteriaScores = new JButton("Criteria Scores");
+	    search.addActionListener(new ActionListener() {
+	      public void actionPerformed(ActionEvent e) {
+	    	QueryBuilder q = new QueryBuilder(fnameField.getText(), lnameField.getText(), criteriaField.getText(), aiField.getText(), semesterField.getText());
+	    	try {
+				rstm = new ResultSetTableModelFactory();
+			} catch (ClassNotFoundException e1) {
+				// do nothing
+				e1.printStackTrace();
+			} catch (SQLException e1) {
+				// do nothing
+				e1.printStackTrace();
+			}
+	  	    QueryTableModel qtm = null;
+			try {
+				qtm = rstm.getResultSetTableModel(q.criterionScores());
+			} catch (SQLException e1) {
+				// do nothing
+				e1.printStackTrace();
+			}
+	  	    JTable table = new JTable(qtm);
+	  	    scrollpane = new JScrollPane(table);
+	      }
+	    });
+	    
+	    JButton aiScores = new JButton("Assessment Scores");
+	    search.addActionListener(new ActionListener() {
+	      public void actionPerformed(ActionEvent e) {
+	    	QueryBuilder q = new QueryBuilder(fnameField.getText(), lnameField.getText(), criteriaField.getText(), aiField.getText(), semesterField.getText());
+	    	try {
+				rstm = new ResultSetTableModelFactory();
+			} catch (ClassNotFoundException e1) {
+				// do nothing
+				e1.printStackTrace();
+			} catch (SQLException e1) {
+				// do nothing
+				e1.printStackTrace();
+			}
+	  	    QueryTableModel qtm = null;
+			try {
+				qtm = rstm.getResultSetTableModel(q.aiScores());
+			} catch (SQLException e1) {
+				// do nothing
+				e1.printStackTrace();
+			}
+	  	    JTable table = new JTable(qtm);
+	  	    scrollpane = new JScrollPane(table);
+	      }
+	    });
+	    
+	    p1.add(aiScores);
+	    p1.add(criteriaScores);
+	    p1.add(students);
 	    p1.add(search);
 	    getContentPane().add(p1, BorderLayout.NORTH);
 	    getContentPane().add(scrollpane, BorderLayout.CENTER);

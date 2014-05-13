@@ -31,21 +31,21 @@ public class Table extends JFrame{
 	ResultSetTableModelFactory rstm;
 
 	  public Table() throws ClassNotFoundException, SQLException {
-	    super("Database Test Frame");
+	    super("Super Cool Thing");
 	    setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 	    setSize(950,700);
 	    JPanel p1 = new JPanel();
-	    p1.setLayout(new GridLayout(3, 2));
-	    p1.add(new JLabel("AssessmentItem"));
+	    p1.setLayout(new GridLayout(6, 2));
+	    p1.add(new JLabel("Assessment Item:"));
 	    p1.add(aiField = new JTextField());
-	    p1.add(new JLabel("Criteria"));
+	    p1.add(new JLabel("Criteria:"));
 	    p1.add(criteriaField = new JTextField());
-	    p1.add(new JLabel("Semester"));
+	    p1.add(new JLabel("Semester:"));
 	    p1.add(semesterField = new JTextField());
-	    p1.add(new JLabel("First Name"));
+	    p1.add(new JLabel("First Name:"));
 	    p1.add(fnameField = new JTextField());
-	    p1.add(new JLabel("Last Name"));
+	    p1.add(new JLabel("Last Name:"));
 	    p1.add(lnameField = new JTextField());
 	    
 	    JButton search = new JButton("Search");
@@ -71,7 +71,7 @@ public class Table extends JFrame{
 			}
 			JScrollPane scrollPane = new JScrollPane();
 	        scrollPane.setViewportBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-	        scrollPane.setBounds(0,75,950,700);
+	        scrollPane.setBounds(0,150,950,700);
 	        getContentPane().add(scrollPane);	
 	        
 	        JPanel resultsPanel = new JPanel();
